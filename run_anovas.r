@@ -2,7 +2,10 @@ library('ez')
 library('plyr')
 library('ggplot2')
 
-setwd("/Users/janosbotyanszki/Dropbox/bubs/RCP_datasets")
+
+source('config.r')
+
+setwd(working_dir)
 
 
 cleaned_datafile = 'cleaned_data.csv'
