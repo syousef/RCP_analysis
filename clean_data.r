@@ -80,23 +80,6 @@ get_thresholds_dict <- function(arr, log=FALSE) {
     return(e)
 }
 
-get_complete_data <- function(df) {
-    #
-    #  return only rows in which both pre and post data are available
-    #
-    
-    df_pre = df[(df$time == 'pre'),]
-    df_post = df[(df$time == 'post'),]
-    
-    # find unique IDs where pre and post are available, even if you remove compatible distractor types
-    prepost_ids = unique((merge(df_pre[df_pre$distractor_type != 'compatible',], 
-                                df_post[df_post$distractor_type != 'compatible',], by = "Subject.ID"))$Subject.ID)
-    df_pre_complete = df_pre[is.element(df_pre$Subject.ID, prepost_ids),]
-    df_post_complete = df_post[is.element(df_post$Subject.ID, prepost_ids),]
-    
-    return(rbind(df_pre_complete, df_post_complete))
-
-}
 
 print_fraction_below <- function(arr, thresh) {
     arr = arr[!is.na(arr)]
@@ -193,40 +176,27 @@ rcp3_3_0 = rcp3[(!is.na(rcp3$rt)) & (rcp3$rt > rcp3_env$minus_3_0_sigma) & (rcp3
 
 # AGGREGATE DATA OVER TRIALS 
 rcp1_avg = ddply(rcp1, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, rt_avg = mean(rt), rt_med = median(rt), acc_avg = mean(correct), wm_rt_avg = mean(wm_rt..RCP.3.only.))
+rcp1_avg$cut = 'None'
 rcp1_2_5_avg = ddply(rcp1_2_5, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, rt_avg = mean(rt), rt_med = median(rt), acc_avg = mean(correct), wm_rt_avg = mean(wm_rt..RCP.3.only.))
+rcp1_2_5_avg$cut = '2_5'
 rcp1_3_0_avg = ddply(rcp1_3_0, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, rt_avg = mean(rt), rt_med = median(rt), acc_avg = mean(correct), wm_rt_avg = mean(wm_rt..RCP.3.only.))
+rcp1_3_0_avg$cut = '3_0'
 
 rcp2_rt_avg = ddply(rcp2_rt, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, rt_avg = mean(rt), rt_med = median(rt), acc_avg = mean(correct), wm_rt_avg = mean(wm_rt..RCP.3.only.))
+rcp2_avg$cut = 'None'
 rcp2_rt_2_5_avg = ddply(rcp2_rt_2_5, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, rt_avg = mean(rt), rt_med = median(rt), acc_avg = mean(correct), wm_rt_avg = mean(wm_rt..RCP.3.only.))
+rcp2_2_5_avg$cut = '2_5'
 rcp2_rt_3_0_avg = ddply(rcp2_rt_3_0, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, rt_avg = mean(rt), rt_med = median(rt), acc_avg = mean(correct), wm_rt_avg = mean(wm_rt..RCP.3.only.))
+rcp2_3_0_avg$cut = '3_0'
 
 rcp3_avg = ddply(rcp3, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, rt_avg = mean(rt), rt_med = median(rt), acc_avg = mean(correct), wm_rt_avg = mean(wm_rt..RCP.3.only.))
+rcp3_avg$cut = 'None'
 rcp3_2_5_avg = ddply(rcp3_2_5, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, rt_avg = mean(rt), rt_med = median(rt), acc_avg = mean(correct), wm_rt_avg = mean(wm_rt..RCP.3.only.))
+rcp3_2_5_avg$cut = '2_5'
 rcp3_3_0_avg = ddply(rcp3_3_0, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, rt_avg = mean(rt), rt_med = median(rt), acc_avg = mean(correct), wm_rt_avg = mean(wm_rt..RCP.3.only.))
+rcp3_3_0_avg$cut = '3_0'
 
 
-# drop data where we don't have PRE and POST
-rcp1_c = get_complete_data(rcp1_avg)
-rcp1_c$cut = 'None'
-rcp1_2_5_c = get_complete_data(rcp1_2_5_avg)
-rcp1_2_5_c$cut = '2_5'
-rcp1_3_0_c = get_complete_data(rcp1_3_0_avg)
-rcp1_3_0_c$cut = '3_0'
-
-rcp2_rt_c = get_complete_data(rcp2_rt_avg)
-rcp2_rt_c$cut = 'None'
-rcp2_rt_2_5_c = get_complete_data(rcp2_rt_2_5_avg)
-rcp2_rt_2_5_c$cut = '2_5'
-rcp2_rt_3_0_c = get_complete_data(rcp2_rt_3_0_avg)
-rcp2_rt_3_0_c$cut = '3_0'
-
-rcp3_c = get_complete_data(rcp3_avg)
-rcp3_c$cut = 'None'
-rcp3_2_5_c = get_complete_data(rcp3_2_5_avg)
-rcp3_2_5_c$cut = '2_5'
-rcp3_3_0_c = get_complete_data(rcp3_3_0_avg)
-rcp3_3_0_c$cut = '3_0'
-
-table_to_output = rbind(rcp1_c, rcp1_2_5_c, rcp1_3_0_c, rcp2_rt_c, rcp2_rt_2_5_c, rcp2_rt_3_0_c, rcp3_c, rcp3_2_5_c, rcp3_3_0_c)
+table_to_output = rbind(rcp1_avg, rcp1_2_5_avg, rcp1_3_0_avg, rcp2_rt_avg, rcp2_rt_2_5_avg, rcp2_rt_3_0_avg, rcp3_avg, rcp3_2_5_avg, rcp3_3_0_avg)
 write.table(table_to_output, file = "cleaned_data.csv", row.names=FALSE, na="",col.names=TRUE, sep=",")
 
