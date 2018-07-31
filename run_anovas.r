@@ -41,11 +41,11 @@ for (cut in c("2_5", "3_0", "None")){
 	pre2 = rcp2_rt_c[rcp2_rt_c$time == 'pre',]
 	pre3 = rcp3_c[rcp3_c$time == 'pre',]
 
-	pre1_avgs = ddply(pre1, .(SA.load, distractor_type), summarise, rt_avg = mean(rt_avg)*1000)
-	pre2_avgs = ddply(pre2, .(SA.load, distractor_type), summarise, rt_avg = mean(rt_avg)*1000)
-	pre3_avgs = ddply(pre3, .(wm_load_fix, distractor_type), summarise, rt_avg = mean(rt_avg)*1000)
+	pre1_avgs = ddply(pre1, .(SA.load, distractor_type), summarise, rt_avg = mean(rt_avg)*1000, rt_med = mean(rt_med)*1000)
+	pre2_avgs = ddply(pre2, .(SA.load, distractor_type), summarise, rt_avg = mean(rt_avg)*1000, rt_med = mean(rt_med)*1000)
+	pre3_avgs = ddply(pre3, .(wm_load_fix, distractor_type), summarise, rt_avg = mean(rt_avg)*1000, rt_med = mean(rt_med)*1000)
 
-	print(c("##### CUT: ", cut))
+	print(c("##### RT AVG, CUT: ", cut))
 	print(pre1_avgs)
 	print(pre1_avgs[pre1_avgs$distractor_type == 'incompatible',]$rt_avg - pre1_avgs[pre1_avgs$distractor_type == 'neutral',]$rt_avg)
 	print(pre2_avgs)
@@ -70,6 +70,10 @@ for (cut in c("2_5", "3_0", "None")){
 	rcp2_rt_c = df[(df$cut == cut) & (df$section == 2) & (df$time == 'pre'),]
 	rcp3_c = df[(df$cut == cut) & (df$section == 3) & (df$time == 'pre'),]
 
+	# the following subject does not have complete data. remove
+	rcp3_c = rcp3_c[rcp3_c$Subject.ID != 7932,]
+
+
 	# drop data where we don't have PRE and POST
 	#rcp1_c = get_complete_data(rcp1_c)
 	#rcp2_rt_c = get_complete_data(rcp2_rt_c)
@@ -83,9 +87,9 @@ for (cut in c("2_5", "3_0", "None")){
 	print(c("RCP2 average RT. CUT: ", cut))
 	z = ezANOVA(data = rcp2_rt_c, wid = Subject.ID, within= c(SA.load, distractor_type), dv = rt_avg)
 	print(z$ANOVA[z$ANOVA$"p<.05" == "*",])
-	#print(c("RCP3 average RT. CUT: ", cut))
-	#z = ezANOVA(data = rcp3_c, wid = Subject.ID, within= c(wm_load_fix, distractor_type), dv = rt_avg)
-	#print(z$ANOVA[z$ANOVA$"p<.05" == "*",])
+	print(c("RCP3 average RT. CUT: ", cut))
+	z = ezANOVA(data = rcp3_c, wid = Subject.ID, within= c(wm_load_fix, distractor_type), dv = rt_avg)
+	print(z$ANOVA[z$ANOVA$"p<.05" == "*",])
 
 
 	# Run MEDIAN RTs
@@ -95,9 +99,9 @@ for (cut in c("2_5", "3_0", "None")){
 	print(c("RCP2 median RT. CUT: ", cut))
 	z = ezANOVA(data = rcp2_rt_c, wid = Subject.ID, within= c(SA.load, distractor_type), dv = rt_med)
 	print(z$ANOVA[z$ANOVA$"p<.05" == "*",])
-	#print(c("RCP3 median RT. CUT: ", cut))
-	#z = ezANOVA(data = rcp3_c, wid = Subject.ID, within= c(wm_load_fix, distractor_type), dv = rt_med)
-	#print(z$ANOVA[z$ANOVA$"p<.05" == "*",])
+	print(c("RCP3 median RT. CUT: ", cut))
+	z = ezANOVA(data = rcp3_c, wid = Subject.ID, within= c(wm_load_fix, distractor_type), dv = rt_med)
+	print(z$ANOVA[z$ANOVA$"p<.05" == "*",])
 
 	# ACCURACIES
 
@@ -107,9 +111,9 @@ for (cut in c("2_5", "3_0", "None")){
 
 	# WM 
 
-	#print(c("RCP3 average WM RT. CUT: ", cut))
-	#z = ezANOVA(data = rcp3_c, wid = Subject.ID, within= c(wm_load_fix, distractor_type), between = Group, dv = wm_rt_avg)
-	#print(z$ANOVA[z$ANOVA$"p<.05" == "*",])
+	print(c("RCP3 average WM RT. CUT: ", cut))
+	z = ezANOVA(data = rcp3_c, wid = Subject.ID, within= c(wm_load_fix, distractor_type), dv = wm_rt_avg)
+	print(z$ANOVA[z$ANOVA$"p<.05" == "*",])
 
 }
 
