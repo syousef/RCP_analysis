@@ -7,7 +7,8 @@ source('config.r')
 
 setwd(working_dir)
 
-cleaned_datafile = 'cleaned_data.csv'
+cleaned_datafile_RT = 'cleaned_data_RT.csv'
+cleaned_datafile_ACC = 'cleaned_data_ACC.csv'
 
 
 get_complete_data <- function(df) {
@@ -73,13 +74,6 @@ for (cut in c("2_5", "3_0", "None")){
 	# the following subject does not have complete data. remove
 	rcp3_c = rcp3_c[rcp3_c$Subject.ID != 7932,]
 
-
-	# drop data where we don't have PRE and POST
-	#rcp1_c = get_complete_data(rcp1_c)
-	#rcp2_rt_c = get_complete_data(rcp2_rt_c)
-	#rcp3_c = get_complete_data(rcp3_c)
-
-
 	# Run AVG RTs
 	print(c("RCP1 average RT. CUT: ", cut))
 	z = ezANOVA(data = rcp1_c, wid = Subject.ID, within= c(SA.load, distractor_type), dv = rt_avg)
@@ -103,12 +97,6 @@ for (cut in c("2_5", "3_0", "None")){
 	z = ezANOVA(data = rcp3_c, wid = Subject.ID, within= c(wm_load_fix, distractor_type), dv = rt_med)
 	print(z$ANOVA[z$ANOVA$"p<.05" == "*",])
 
-	# ACCURACIES
-
-	##
-	##
-	##
-
 	# WM 
 
 	print(c("RCP3 average WM RT. CUT: ", cut))
@@ -118,16 +106,29 @@ for (cut in c("2_5", "3_0", "None")){
 }
 
 
+#### ACCURACY ANOVAS
 
+# reread data and drop compatible trials
+df <- read.csv(file=cleaned_datafile_ACC, fileEncoding="latin1")
+df = df[df$distractor_type != 'compatible',]
 
+rcp1_acc = df[df$cut=='rcp1_0_75',]
+print("RCP1 accuracy")
+z = ezANOVA(data = rcp1_acc, wid = Subject.ID, within= c(SA.load, distractor_type), dv = acc_avg)
+print(z$ANOVA[z$ANOVA$"p<.05" == "*",])
 
-#### Pre RCP1 RT by load, distractor type (no group)
-#ezANOVA(data = rcp1_c[rcp1_c$time == 'pre',], wid = Subject.ID, within= c(SA.load, distractor_type), dv = rt_avg)
-#ezANOVA(data = rcp1_2_5_c[rcp1_2_5_c$time == 'pre',], wid = Subject.ID, within= c(SA.load, distractor_type), dv = rt_avg)
-#ezANOVA(data = rcp1_3_0_c[rcp1_3_0_c$time == 'pre',], wid = Subject.ID, within= c(SA.load, distractor_type), dv = rt_avg)
+rcp2_acc = df[df$cut=='rcp2_0_80',]
+print("RCP2 accuracy")
+z = ezANOVA(data = rcp2_acc, wid = Subject.ID, within= c(SA.load, distractor_type), dv = acc_avg)
+print(z$ANOVA[z$ANOVA$"p<.05" == "*",])
 
+rcp3_acc = df[df$cut=='rcp3_0_80',]
+print("RCP3 accuracy")
+z = ezANOVA(data = rcp3_acc, wid = Subject.ID, within= c(SA.load, distractor_type), dv = acc_avg)
+print(z$ANOVA[z$ANOVA$"p<.05" == "*",])
 
-
-
-
+rcp3_WM_acc = df[df$cut=='rcp3_WM_0_70',]
+print("RCP3 WM accuracy")
+z = ezANOVA(data = rcp3_WM_acc, wid = Subject.ID, within= c(wm_load_fix, distractor_type), dv = wm_acc_avg)
+print(z$ANOVA[z$ANOVA$"p<.05" == "*",])
 

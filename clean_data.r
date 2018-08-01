@@ -106,7 +106,7 @@ rcp2_acc = df[(df$section == 2) & (!is.na(df$rt)),]
 rcp3 = df[(df$section == 3) & (!is.na(df$rt)),]
 
 
-# OUTLIER DELETION
+# RT OUTLIER DELETION
 
 rcp1_env = get_thresholds_dict(rcp1$rt, log=TRUE)
 rcp2_rt_env = get_thresholds_dict(rcp2_rt$rt, log=TRUE)
@@ -140,80 +140,95 @@ rcp3_3_0 = rcp3[(!is.na(rcp3$rt))
 rcp1_avg = ddply(rcp1, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
                   rt_avg = mean(rt), 
                   rt_med = median(rt), 
+                  wm_rt_avg = mean(wm_rt..RCP.3.only.),
                   acc_avg = mean(correct), 
-                  wm_rt_avg = mean(wm_rt..RCP.3.only.))
+                  wm_acc_avg = mean(wm_correct..RCP.3.only.))
 rcp1_avg$cut = 'None'
 rcp1_2_5_avg = ddply(rcp1_2_5, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
                   rt_avg = mean(rt), 
                   rt_med = median(rt), 
+                  wm_rt_avg = mean(wm_rt..RCP.3.only.),
                   acc_avg = mean(correct), 
-                  wm_rt_avg = mean(wm_rt..RCP.3.only.))
+                  wm_acc_avg = mean(wm_correct..RCP.3.only.))
 rcp1_2_5_avg$cut = '2_5'
 rcp1_3_0_avg = ddply(rcp1_3_0, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
                   rt_avg = mean(rt), 
                   rt_med = median(rt), 
+                  wm_rt_avg = mean(wm_rt..RCP.3.only.),
                   acc_avg = mean(correct), 
-                  wm_rt_avg = mean(wm_rt..RCP.3.only.))
+                  wm_acc_avg = mean(wm_correct..RCP.3.only.))
 rcp1_3_0_avg$cut = '3_0'
 
-rcp2_rt_avg = ddply(rcp2_acc, , .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
+rcp2_rt_avg = ddply(rcp2_rt, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
                   rt_avg = mean(rt), 
                   rt_med = median(rt), 
+                  wm_rt_avg = mean(wm_rt..RCP.3.only.),
                   acc_avg = mean(correct), 
-                  wm_rt_avg = mean(wm_rt..RCP.3.only.))
+                  wm_acc_avg = mean(wm_correct..RCP.3.only.))
 rcp2_rt_avg$cut = 'None'
-rcp2_rt_2_5_avg = ddply(rcp2_acc_2_5, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
+rcp2_rt_2_5_avg = ddply(rcp2_rt_2_5, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
                   rt_avg = mean(rt), 
                   rt_med = median(rt), 
+                  wm_rt_avg = mean(wm_rt..RCP.3.only.),
                   acc_avg = mean(correct), 
-                  wm_rt_avg = mean(wm_rt..RCP.3.only.)) 
+                  wm_acc_avg = mean(wm_correct..RCP.3.only.)) 
 rcp2_rt_2_5_avg$cut = '2_5'
-rcp2_rt_3_0_avg = ddply(rcp2_acc_3_0, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
+rcp2_rt_3_0_avg = ddply(rcp2_rt_3_0, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
                   rt_avg = mean(rt), 
                   rt_med = median(rt), 
+                  wm_rt_avg = mean(wm_rt..RCP.3.only.),
                   acc_avg = mean(correct), 
-                  wm_rt_avg = mean(wm_rt..RCP.3.only.))
+                  wm_acc_avg = mean(wm_correct..RCP.3.only.))
 rcp2_rt_3_0_avg$cut = '3_0'
 
-rcp2_acc_avg = ddply(rcp2_rt, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
+rcp2_acc_avg = ddply(rcp2_acc, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
                   rt_avg = mean(rt), 
                   rt_med = median(rt), 
+                  wm_rt_avg = mean(wm_rt..RCP.3.only.),
                   acc_avg = mean(correct), 
-                  wm_rt_avg = mean(wm_rt..RCP.3.only.))
+                  wm_acc_avg = mean(wm_correct..RCP.3.only.))
 rcp2_acc_avg$cut = 'None'
-rcp2_acc_2_5_avg = ddply(rcp2_rt_2_5, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
-                  rt_avg = mean(rt), 
-                  rt_med = median(rt), 
-                  acc_avg = mean(correct), 
-                  wm_rt_avg = mean(wm_rt..RCP.3.only.))
-rcp2_acc_2_5_avg$cut = '2_5'
-rcp2_acc_3_0_avg = ddply(rcp2_rt_3_0, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
-                  rt_avg = mean(rt), 
-                  rt_med = median(rt), 
-                  acc_avg = mean(correct), 
-                  wm_rt_avg = mean(wm_rt..RCP.3.only.))
-rcp2_acc_3_0_avg$cut = '3_0'
 
 rcp3_avg = ddply(rcp3, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
                   rt_avg = mean(rt), 
                   rt_med = median(rt), 
+                  wm_rt_avg = mean(wm_rt..RCP.3.only.),
                   acc_avg = mean(correct), 
-                  wm_rt_avg = mean(wm_rt..RCP.3.only.))
+                  wm_acc_avg = mean(wm_correct..RCP.3.only.))
 rcp3_avg$cut = 'None'
 rcp3_2_5_avg = ddply(rcp3_2_5, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
                   rt_avg = mean(rt), 
                   rt_med = median(rt), 
+                  wm_rt_avg = mean(wm_rt..RCP.3.only.),
                   acc_avg = mean(correct), 
-                  wm_rt_avg = mean(wm_rt..RCP.3.only.))
+                  wm_acc_avg = mean(wm_correct..RCP.3.only.))
 rcp3_2_5_avg$cut = '2_5'
 rcp3_3_0_avg = ddply(rcp3_3_0, .(Subject.ID, wm_load_fix, SA.load, distractor_type, time, Group, section), summarise, 
                   rt_avg = mean(rt), 
                   rt_med = median(rt), 
+                  wm_rt_avg = mean(wm_rt..RCP.3.only.),
                   acc_avg = mean(correct), 
-                  wm_rt_avg = mean(wm_rt..RCP.3.only.))
+                  wm_acc_avg = mean(wm_correct..RCP.3.only.))
 rcp3_3_0_avg$cut = '3_0'
 
 
 table_to_output = rbind(rcp1_avg, rcp1_2_5_avg, rcp1_3_0_avg, rcp2_rt_avg, rcp2_rt_2_5_avg, rcp2_rt_3_0_avg, rcp3_avg, rcp3_2_5_avg, rcp3_3_0_avg)
-write.table(table_to_output, file = "cleaned_data.csv", row.names=FALSE, na="",col.names=TRUE, sep=",")
+write.table(table_to_output, file = "cleaned_data_RT.csv", row.names=FALSE, na="",col.names=TRUE, sep=",")
+
+
+# Accuracy cuts
+
+rcp1_acc = rcp1_avg[rcp1_avg$acc_avg >= 0.75,]
+rcp1_acc$cut = 'rcp1_0_75'
+rcp2_acc = rcp2_acc_avg[rcp2_acc_avg$acc_avg >= 0.80,]
+rcp2_acc$cut = 'rcp2_0_80'
+rcp3_acc = rcp3_avg[rcp3_avg$acc_avg >= 0.80,]
+rcp3_acc$cut = 'rcp3_0_80'
+rcp3_WM_acc = rcp3_avg[rcp3_avg$wm_acc_avg >= 0.70,]
+rcp3_WM_acc$cut = 'rcp3_WM_0_70'
+
+table_to_output = rbind(rcp1_acc, rcp2_acc, rcp3_acc, rcp3_WM_acc)
+write.table(table_to_output, file = "cleaned_data_ACC.csv", row.names=FALSE, na="",col.names=TRUE, sep=",")
+
+
 
